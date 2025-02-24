@@ -24,8 +24,10 @@ def get_posts_by_user_id(user_id: int) -> dict[str, Any] | None:
 
 
 def get_post_by_id_with_validation(post_id: int) -> dict[str, Any] | None:
-    if post_id <= 0:
-        raise ValueError('post_id must be greater than 0')
+    if post_id == 0:
+        raise ValueError('Invalid ID')
+    if post_id < 0:
+        raise ValueError('post_id must be a positive number')
     try:
         response = http_get(f'{BASE_URL}/{post_id}')
         response.raise_for_status()
