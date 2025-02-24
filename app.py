@@ -1,11 +1,12 @@
 from typing import Any
+
 from requests import get as http_get
 from requests.exceptions import HTTPError
 
 BASE_URL = 'https://jsonplaceholder.typicode.com/posts'
 
 
-def get_post_by_id(post_id: int) -> dict[str, Any]:
+def get_post_by_id(post_id: int) -> dict[str,Any]| None:
     try:
         response = http_get(f'{BASE_URL}/{post_id}')
         response.raise_for_status()

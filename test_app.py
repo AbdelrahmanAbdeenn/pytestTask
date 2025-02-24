@@ -1,12 +1,16 @@
+from typing import Any
 from unittest.mock import Mock
+
 import pytest
 from requests import HTTPError, Response
-from app import get_post_by_id, get_posts_by_user_id,get_post_by_id_with_validation
 
-def test_get_post_by_id(mocker):    
-    mock_response = Mock(spec=Response)
+from app import (get_post_by_id, get_post_by_id_with_validation,
+                 get_posts_by_user_id)
+
+
+def test_get_post_by_id(mocker) -> None:    
+    mock_response :Mock = Mock(spec=Response)
     mock_response.status_code = 200
-    
     mock_response.json.return_value = {
         'userId': 1,
         'id': 1,
@@ -15,13 +19,13 @@ def test_get_post_by_id(mocker):
     }
     
     mock_get=mocker.patch('app.http_get', return_value=mock_response)
-    result = get_post_by_id(1)
+    result :dict[str,Any]| None = get_post_by_id(1)
     mock_get.assert_called_once_with('https://jsonplaceholder.typicode.com/posts/1')
     
             
 def test_get_posts_by_user_id_http_error(mocker):
     mocker.patch('app.http_get', side_effect=HTTPError("HTTP error occurred"))
-    result = get_posts_by_user_id(1)
+    result :dict[str,Any]| None= get_posts_by_user_id(1)
     assert result is None
 
 def test_get_posts_by_user_id(mocker):
@@ -43,7 +47,7 @@ def test_get_posts_by_user_id(mocker):
     ]
     
     mock_get=mocker.patch('app.http_get', return_value=mock_response)
-    result = get_posts_by_user_id(1)
+    result:dict[str,Any]| None = get_posts_by_user_id(1)
     mock_get.assert_called_once_with('https://jsonplaceholder.typicode.com/posts?userId=1')    
     
 
@@ -66,7 +70,7 @@ def test_get_post_by_id_with_validation(mocker):
 def test_get_post_by_id_with_validation_http_error(mocker):
 
     mocker.patch('app.http_get', side_effect=HTTPError("HTTP error occurred"))
-    result = get_post_by_id_with_validation(1)
+    result :dict[str,Any]| None= get_post_by_id_with_validation(1)
     assert result is None
 
 def test_get_post_by_id_with_validation_invalid_id():
